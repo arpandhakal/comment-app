@@ -1,4 +1,6 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, type MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { db } from "~/utils/db.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,7 +9,15 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const loader = async () => {
+  return json({
+    post: await db.post.findMany(),
+  });
+};
+
 export default function Index() {
+  const data = useLoaderData<typeof loader>();
+
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>

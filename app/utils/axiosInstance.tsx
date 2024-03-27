@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-export const base_url = "http://localhost:3001";
+export const base_url = process.env.base_url;
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: base_url,

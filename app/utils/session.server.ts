@@ -36,6 +36,15 @@ export async function getUserToken(request: Request) {
   return access_token;
 }
 
+export async function logout(request: Request) {
+  const session = await getUserSession(request);
+  return redirect("/signin", {
+    headers: {
+      "Set-Cookie": await storage.destroySession(session),
+    },
+  });
+}
+
 export async function requireUserToken(
   request: Request,
   redirectTo: string = new URL(request.url).pathname

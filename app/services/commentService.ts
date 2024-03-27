@@ -6,7 +6,21 @@ class CommentService {
   async getComments(limit: number, token: string) {
     const response = await axios({
       method: "get",
-      url: base_url + commentApplicationEndpoints.comment,
+      url: base_url + commentApplicationEndpoints.comment + `/?limit=${limit}`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  }
+
+  async getMyComments(token: string) {
+    const response = await axios({
+      method: "get",
+      url: base_url + commentApplicationEndpoints.myComment,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

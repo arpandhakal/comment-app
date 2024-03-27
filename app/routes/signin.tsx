@@ -1,7 +1,9 @@
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { useActionData, useNavigate } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/Button";
 import { FormInput } from "~/components/FormInput";
+import { SnackBar } from "~/components/SnackBar";
 import { AuthService } from "~/services/authService";
 import { createUserSession } from "~/utils/session.server";
 
@@ -23,7 +25,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function SignIn() {
   const navigate = useNavigate();
   const actionData = useActionData<typeof action>();
+  const [showAlert, setShowAlert] = useState(false);
 
+  useEffect(() => {
+    let timeout: any;
+
+    if (actionData === "error") {
+      setShowAlert(true);
+
+      timeout = setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [actionData]);
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -74,6 +90,7 @@ export default function SignIn() {
           </a>
         </p>
       </div>
+      {showAlert && <SnackBar message="Error signing in" />}
     </div>
   );
 }
